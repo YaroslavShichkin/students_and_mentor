@@ -17,8 +17,12 @@ class Student:
         else:
             return 'Ошибка'
 
+    def _average_rating(self):
+        res = sum(sum(self.grades.values(), [])) / len(sum(self.grades.values(), []))
+        return res
+
     def __str__(self):
-        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания:\nКурсы в процессе изучения:\nЗавершенные курсы:"
+        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {''.join(self.courses_in_progress)}\nЗавершенные курсы: {''.join(self.finished_courses)}"
         return res
 
 
