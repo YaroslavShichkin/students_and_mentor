@@ -1,3 +1,19 @@
+def average_rating_hw(course, students):
+    x = []
+    for student in students:
+        if course in student.grades.keys():
+            x += student.grades[course]
+    return sum(x) / len(x)
+
+
+def average_rating_lecture(course, lecturers):
+    x = []
+    for lecturer in lecturers:
+        if course in lecturer.courses_attached:
+            x += lecturer.grades[course]
+    return sum(x) / len(x)
+
+
 class Student:
     def __init__(self, name, surname, gender):
         self.name = name
@@ -6,6 +22,7 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
+        students.append(self)
 
     def rate_lecture(self, lecturer, course, grade):
         if isinstance(lecturer,
@@ -24,7 +41,7 @@ class Student:
         return res
 
     def __str__(self):
-        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {' '.join(self.courses_in_progress)}\nЗавершенные курсы: {' '.join(self.finished_courses)}\n"
+        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: {', '.join(self.finished_courses)}\n"
         return res
 
     def __lt__(self, other):
@@ -45,6 +62,7 @@ class Lecturer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
+        lecturers.append(self)
 
     def _average_rating(self):
         res = sum(sum(self.grades.values(), [])) / len(sum(self.grades.values(), []))
@@ -76,6 +94,9 @@ class Reviewer(Mentor):
         return res
 
 
+students = []
+lecturers = []
+
 student_1 = Student('Иван', 'Иванов', 'мужской')
 student_1.courses_in_progress += ['Python', 'Git']
 student_1.finished_courses += ['Введение в программирование']
@@ -98,8 +119,8 @@ reviewer_2.courses_attached += ['Python']
 
 reviewer_1.rate_hw(student_1, 'Python', 7)
 reviewer_2.rate_hw(student_1, 'Python', 5)
-reviewer_1.rate_hw(student_1, 'Python', 10)
-reviewer_2.rate_hw(student_1, 'Python', 9)
+reviewer_1.rate_hw(student_2, 'Python', 10)
+reviewer_2.rate_hw(student_2, 'Python', 9)
 reviewer_1.rate_hw(student_1, 'Git', 10)
 reviewer_1.rate_hw(student_1, 'Git', 7)
 
@@ -115,3 +136,6 @@ print(student_1.grades, student_2.grades, lecturer_1.grades, lecturer_2.grades, 
 print(student_1, student_2, lecturer_1, lecturer_2, reviewer_1, reviewer_2, sep="\n")
 
 print(student_1 > student_2, lecturer_1 < lecturer_2, sep="\n")
+
+print(average_rating_hw("Python", students))
+print(average_rating_lecture("Python", lecturers))
