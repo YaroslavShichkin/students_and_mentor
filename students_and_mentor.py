@@ -8,7 +8,8 @@ class Student:
         self.grades = {}
 
     def rate_lecture(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
+        if isinstance(lecturer,
+                      Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -17,13 +18,15 @@ class Student:
             return 'Ошибка'
 
     def _average_rating(self):
+        if len(sum(self.grades.values(), [])) == 0:
+            return 0
         res = sum(sum(self.grades.values(), [])) / len(sum(self.grades.values(), []))
         return res
 
     def __str__(self):
-        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {''.join(self.courses_in_progress)}\nЗавершенные курсы: {''.join(self.finished_courses)}"
+        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {' '.join(self.courses_in_progress)}\nЗавершенные курсы: {' '.join(self.finished_courses)}\n"
         return res
-    
+
     def __lt__(self, other):
         if not isinstance(other, Student):
             print("Ошибка")
@@ -48,7 +51,7 @@ class Lecturer(Mentor):
         return res
 
     def __str__(self):
-        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции:{self._average_rating()}"
+        res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self._average_rating()}\n"
         return res
 
     def __lt__(self, other):
@@ -69,28 +72,46 @@ class Reviewer(Mentor):
             return 'Ошибка'
 
     def __str__(self):
-        res = f"Имя: {self.name}\nФамилия: {self.surname}"
+        res = f"Имя: {self.name}\nФамилия: {self.surname}\n"
         return res
 
 
-best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
+student_1 = Student('Иван', 'Иванов', 'мужской')
+student_1.courses_in_progress += ['Python', 'Git']
+student_1.finished_courses += ['Введение в программирование']
 
-cool_lecturer = Lecturer('Alex', 'Green')
-cool_lecturer.courses_attached += ['Python']
+student_2 = Student('Анна', 'Лазарева', 'женский')
+student_2.courses_in_progress += ['Python']
+student_2.finished_courses += ['Введение в программирование']
 
-cool_reviewer = Reviewer('Some', 'Buddy')
-cool_reviewer.courses_attached += ['Python']
+lecturer_1 = Lecturer('Александр', 'Коган')
+lecturer_1.courses_attached += ['Python', 'Git']
 
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
+lecturer_2 = Lecturer('Анатолий', 'Владимиров')
+lecturer_2.courses_attached += ['Python']
 
-best_student.rate_lecture(cool_lecturer, 'Python', 9)
+reviewer_1 = Reviewer('Максим', 'Горшков')
+reviewer_1.courses_attached += ['Python', 'Git']
 
-print(best_student.grades)
-print(cool_lecturer.grades)
+reviewer_2 = Reviewer('Илья', 'Башкин')
+reviewer_2.courses_attached += ['Python']
 
-print(best_student)
-print(cool_lecturer)
-print(cool_reviewer)
+reviewer_1.rate_hw(student_1, 'Python', 7)
+reviewer_2.rate_hw(student_1, 'Python', 5)
+reviewer_1.rate_hw(student_1, 'Python', 10)
+reviewer_2.rate_hw(student_1, 'Python', 9)
+reviewer_1.rate_hw(student_1, 'Git', 10)
+reviewer_1.rate_hw(student_1, 'Git', 7)
+
+student_1.rate_lecture(lecturer_1, 'Python', 9)
+student_1.rate_lecture(lecturer_1, 'Git', 10)
+student_1.rate_lecture(lecturer_1, 'Git', 8)
+student_2.rate_lecture(lecturer_1, 'Python', 10)
+student_2.rate_lecture(lecturer_2, 'Python', 5)
+student_1.rate_lecture(lecturer_2, 'Python', 10)
+
+print(student_1.grades, student_2.grades, lecturer_1.grades, lecturer_2.grades, sep="\n")
+
+print(student_1, student_2, lecturer_1, lecturer_2, reviewer_1, reviewer_2, sep="\n")
+
+print(student_1 > student_2, lecturer_1 < lecturer_2, sep="\n")
