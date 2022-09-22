@@ -8,8 +8,7 @@ class Student:
         self.grades = {}
 
     def rate_lecture(self, lecturer, course, grade):
-        if isinstance(lecturer,
-                      Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
+        if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -24,6 +23,12 @@ class Student:
     def __str__(self):
         res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._average_rating()}\nКурсы в процессе изучения: {''.join(self.courses_in_progress)}\nЗавершенные курсы: {''.join(self.finished_courses)}"
         return res
+    
+    def __lt__(self, other):
+        if not isinstance(other, Student):
+            print("Ошибка")
+            return
+        return self._average_rating() < other._average_rating()
 
 
 class Mentor:
@@ -45,6 +50,12 @@ class Lecturer(Mentor):
     def __str__(self):
         res = f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции:{self._average_rating()}"
         return res
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            print("Ошибка")
+            return
+        return self._average_rating() < other._average_rating()
 
 
 class Reviewer(Mentor):
